@@ -5,21 +5,16 @@ import 'typeface-roboto'
 import Reboot from 'material-ui/Reboot';
 import Button from 'material-ui/Button';
 import lg from 'material-ui'
-
-import Header from './Header/Header';
-
 import {MuiThemeProvider, createMuiTheme} from 'material-ui/styles';
-import deepOrange from 'material-ui/colors/deepOrange';
-import pink from 'material-ui/colors/pink';
 import purple from 'material-ui/colors/purple';
 import red from 'material-ui/colors/red';
 
-// All the following keys are optional.
-// We try our best to provide a great default value.
+import Header from '../components/Header/Header';
+
 const theme = createMuiTheme({
     palette: {
-        primary: { main: purple[500] },
-        secondary: { main: '#11cb5f' },
+        primary: {main: purple[500]},
+        secondary: {main: '#11cb5f'},
         error: red,
         // Used by `getContrastText()` to maximize the contrast between the background and
         // the text.
@@ -49,14 +44,13 @@ class App extends Component {
             <MuiThemeProvider theme={theme}>
                 <div className="App">
                     <Reboot/>
-                    <Header className="App-header"/>
-                    <lg className="App-intro test">
+                    <Header/>
+                    <lg>
                         <div>
                             <Button raised color="secondary">
                                 Hello World
                             </Button>
                         </div>
-
                     </lg>
                 </div>
             </MuiThemeProvider>
