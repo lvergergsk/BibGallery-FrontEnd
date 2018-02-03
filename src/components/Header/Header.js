@@ -24,7 +24,7 @@ const styles = {
     },
 };
 
-class MenuAppBar extends React.Component {
+class Header extends React.Component {
     state = {
         auth: true,
         anchorEl: null,
@@ -103,8 +103,8 @@ class MenuAppBar extends React.Component {
     }
 }
 
-MenuAppBar.propTypes = {
+Header.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MenuAppBar);
+export default withStyles(styles)(Header);
