@@ -1,15 +1,15 @@
 import React, {Component} from 'react';
-import './App.css';
+import classes from './App.css'
 import 'typeface-roboto'
 
 import Reboot from 'material-ui/Reboot';
-import Button from 'material-ui/Button';
-import lg from 'material-ui'
 import {MuiThemeProvider, createMuiTheme} from 'material-ui/styles';
 import purple from 'material-ui/colors/purple';
 import red from 'material-ui/colors/red';
 
-import Header from '../components/Header/Header';
+import Header from './components/Header/Header';
+import Landing from './components/Landing/Landing'
+import QueryInterface from './components/QueryInterface/QueryInterface'
 
 const theme = createMuiTheme({
     palette: {
@@ -42,16 +42,14 @@ class App extends Component {
     render() {
         return (
             <MuiThemeProvider theme={theme}>
-                <div className="App">
+                <div className={classes.App}>
                     <Reboot/>
                     <Header/>
-                    <lg>
-                        <div>
-                            <Button raised color="secondary">
-                                Hello World
-                            </Button>
-                        </div>
-                    </lg>
+                    <div className={classes["page-layout"]}>
+                        <Landing/>
+                        <QueryInterface/>
+                    </div>
+
                 </div>
             </MuiThemeProvider>
         );
