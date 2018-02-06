@@ -11,7 +11,7 @@ import {BrowserRouter, Route} from 'react-router-dom';
 
 import Header from './containers/Header/Header';
 import Landing from './components/Landing/Landing'
-import QueryInterface from './components/QueryInterface/QueryInterface'
+import QueryInterface from './containers/QueryInterface/QueryInterface'
 
 const theme = createMuiTheme({
     palette: {
