@@ -4,12 +4,12 @@ import {Link} from 'react-router-dom'
 
 import classes from './Landing.css'
 import bgImage from '../../assets/images/bg.jpg'
-import ReactAux from '../../hoc/ReactAux'
+import ReactAux from '../../hoc/ReactAux/ReactAux'
 
 
 const landing = (props) => (
     <ReactAux>
-        <div><img className={classes.bg} src={bgImage}/></div>
+        <div><img className={classes.bg} src={bgImage} alt="bgImage"/></div>
         <div className={classes.root}>
             <h1>This is a landing page...</h1>
             <div>Adding some content here, maybe some nice picture.</div>
