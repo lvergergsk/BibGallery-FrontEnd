@@ -14,9 +14,9 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 auth: false
             };
+        default:
+            return state;
     }
-
-    return state;
 };
 
 export default reducer;

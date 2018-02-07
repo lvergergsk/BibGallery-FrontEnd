@@ -14,8 +14,11 @@ const landing = (props) => (
             <h1>This is a landing page...</h1>
             <div>Adding some content here, maybe some nice picture.</div>
             <div>And a "login" or "get started" button like this:</div>
-            <div><Link to="/query" style={{textDecoration: 'none'}}><Button className={classes["get-started-button"]}>get
-                started!</Button></Link></div>
+            <div>
+                <Link to="/query" style={{textDecoration: 'none'}}>
+                    <Button className={classes["get-started-button"]}>get started!</Button>
+                </Link>
+            </div>
         </div>
     </ReactAux>
 )
