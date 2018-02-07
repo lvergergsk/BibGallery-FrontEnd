@@ -4,8 +4,6 @@ import 'typeface-roboto'
 
 import Reboot from 'material-ui/Reboot';
 import {MuiThemeProvider, createMuiTheme} from 'material-ui/styles';
-import grey from 'material-ui/colors/grey'
-import red from 'material-ui/colors/red';
 import {BrowserRouter, Route} from 'react-router-dom';
 
 
@@ -13,15 +11,18 @@ import Header from './containers/Header/Header';
 import Landing from './components/Landing/Landing'
 import QueryInterface from './containers/QueryInterface/QueryInterface'
 
-const theme = createMuiTheme({
-    palette: {
-        primary: {main: "#FFF"},
-        secondary: {main: grey[300]},
-        error: red,
-        contrastThreshold: 3,
-        tonalOffset: 0.2,
-    },
-});
+// const theme = createMuiTheme({
+//     palette: {
+//         primary: {main: "#FFF"},
+//         secondary: {main: green[300]},
+//         error: red,
+//         contrastThreshold: 3,
+//         tonalOffset: 0.2,
+//     },
+// });
+
+const theme = createMuiTheme();
+
 
 class App extends Component {
     render() {
