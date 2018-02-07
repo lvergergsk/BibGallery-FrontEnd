@@ -11,10 +11,14 @@ const styles = theme => ({
         margin: "0px 0px 5px 0px",
         display: 'flex',
         flexWrap: 'wrap',
+
     },
     input: {
         margin: theme.spacing.unit,
         width: '40%',
+    },
+    content: {
+        margin: 'auto',
     },
 });
 
@@ -22,7 +26,7 @@ function QueryControl(props) {
     const {classes} = props;
     return (
         <Card className={classes.container}>
-            <CardContent>
+            <CardContent className={classes.content}>
                 <Typography>Year</Typography>
                 <Input
                     placeholder="Start Date"
