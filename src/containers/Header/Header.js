@@ -52,7 +52,8 @@ class Header extends React.Component {
         const {classes} = this.props;
         const {anchorEl} = this.state;
         const open = Boolean(anchorEl);
-
+        console.log("valueAuth: " + this.props.auth);
+        console.log("value: " + this.props.apiBaseUrl);
         return (
             <AppBar position="static" className={classes.appBar}>
                 <Toolbar>
@@ -94,7 +95,9 @@ class Header extends React.Component {
                             <Switch checked={this.props.auth} onChange={this.handleChange} aria-label="LoginSwitch"/>
                         }
                         label={this.props.auth ? 'Logout' : 'Login'}
+
                     />
+
                 </Toolbar>
             </AppBar>
         );
@@ -107,7 +110,8 @@ Header.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        auth: state.auth
+        auth: state.auth,
+        apiBaseUrl: state.apiBaseUrl
     };
 };
 
