@@ -1,0 +1,18 @@
+.signin-card{
+    margin : auto;
+    max-Width : 145px;
+    width : 100px;
+}
+
+.user-form{
+    padding-top: 10px;
+}
+
+.button-color{
+   color: #5384DE;
+}
+
+.signup-card{
+    max-width: 345px;
+    margin : auto;
+}

@@ -21,6 +21,6 @@ const landing = (props) => (
             </div>
         </div>
     </ReactAux>
-)
+);
 
 export default landing

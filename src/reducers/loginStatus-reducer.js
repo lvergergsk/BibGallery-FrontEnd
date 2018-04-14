@@ -1,8 +1,9 @@
 const initialState = {
-    auth: false
-}
+    auth: false,
+    apiBaseUrl : "http://localhost:3001",
+};
 
-const reducer = (state = initialState, action) => {
+const loginStatusReducer= (state = initialState, action) => {
     switch (action.type) {
         case 'LOGIN':
             return {
@@ -19,4 +20,4 @@ const reducer = (state = initialState, action) => {
     }
 };
 
-export default reducer;
+export default loginStatusReducer;
