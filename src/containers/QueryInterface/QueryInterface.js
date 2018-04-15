@@ -1,7 +1,7 @@
 // React:
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import ProtectedRoute from '../../components/ProtectedRoute/ProtectedRoute'
+// import ProtectedRoute from '../../components/ProtectedRoute/ProtectedRoute'
 
 // Material-UI
 import {withStyles} from 'material-ui/styles';
@@ -37,7 +37,7 @@ class QueryInterface extends Component {
 
         return (
             <div className={classes.root}>
-                <ProtectedRoute/>
+                {/*<ProtectedRoute/>*/}
                 <Grid container spacing={24}>
                     <Grid item xs={9} sm={9}>
                         <QueryResults/>

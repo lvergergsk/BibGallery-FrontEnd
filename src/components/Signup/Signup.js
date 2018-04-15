@@ -1,10 +1,31 @@
 import Button from 'material-ui/Button';
-import classes from '../../css/user-form.css';
 import TextField from 'material-ui/TextField';
 import React from 'react';
 import axios from 'axios';
-import Card, {CardContent} from 'material-ui/Card';
 import {connect} from 'react-redux';
+import {withStyles} from "material-ui/styles/index";
+import bookLogo from '../../assets/images/book-logo.png';
+
+const styles = {
+    Logo: {
+        padding: '24px',
+        height: '150px',
+        fontFamily: 'cursive',
+        fontSize: '70px',
+    },
+    Image: {
+        height: '100%',
+        padding: '10px',
+    },
+    Button: {
+        margin: '10px',
+    },
+    InputField: {
+        minWidth: '500px',
+        width: '40%',
+        textAlign: 'center',
+    }
+};
 
 class Signup extends React.Component {
     constructor(props) {
@@ -46,13 +67,14 @@ class Signup extends React.Component {
 
     }
 
-    validateEmail(event){
+    validateEmail(event) {
         let input = event.target.value;
-        let EMAIL_PATTERN ='/^\S+@\S+\.\S+$/';
-        if (input.match(EMAIL_PATTERN)){
+        // let EMAIL_PATTERN = '/^\\S+@\\S+\.\\S+$/';
+        let EMAIL_PATTERN = '';
+        if (input.match(EMAIL_PATTERN)) {
             this.setState({errEmail: true});
             this.setState({emailText: "emails must have the format of xxx@xxxx.xx"});
-        }else{
+        } else {
             this.setState({errEmail: false});
             this.setState({emailText: ""});
             this.setState({email: event.target.value});
@@ -60,7 +82,7 @@ class Signup extends React.Component {
         this.isValid();
     }
 
-    validatePassword(event){
+    validatePassword(event) {
 
         let input = event.target.value;
         let PASSWORD_PATTERN = new RegExp('^[a-zA-Z0-9]$');
@@ -79,22 +101,22 @@ class Signup extends React.Component {
         this.isValid();
     }
 
-    validatePasswordVer(event){
-       let input= event.target.value;
-       if (input !== this.state.password){
-           this.setState({errPasswordVer: true});
-           this.setState({passwordVerText: "Password does not match"});
-       }else{
-           this.setState({errPasswordVer: false});
-           this.setState({passwordVerText: ""});
-       }
-       this.isValid();
+    validatePasswordVer(event) {
+        let input = event.target.value;
+        if (input !== this.state.password) {
+            this.setState({errPasswordVer: true});
+            this.setState({passwordVerText: "Password does not match"});
+        } else {
+            this.setState({errPasswordVer: false});
+            this.setState({passwordVerText: ""});
+        }
+        this.isValid();
     }
 
-    isValid(){
-        if (!this.state.errEmail && !this.state.errUser && !this.state.errPassword && !this.state.errPasswordVer){
+    isValid() {
+        if (!this.state.errEmail && !this.state.errUser && !this.state.errPassword && !this.state.errPasswordVer) {
             console.log(!this.state.errEmail && !this.state.errUser && !this.state.errPassword);
-            this.setState({isValid:true});
+            this.setState({isValid: true});
         }
     }
 
@@ -112,7 +134,7 @@ class Signup extends React.Component {
                 console.log(response);
                 if (response.data.success === true) {
                     console.log("registration successfull");
-                   return this.props.onLogin();
+                    return this.props.onLogin();
                 }
             })
             .catch(function (error) {
@@ -122,67 +144,79 @@ class Signup extends React.Component {
     }
 
     render() {
+        const {classes} = this.props;
+
         return (
             // determine if to use react aux to render multiple components
+            <div>
+                <div className={classes.Logo}>
+                    <img src={bookLogo} alt="bookLogo" className={classes.Image}/> BibGallery
+                </div>
+                <form>
+                    <div>
+                        <TextField
+                            required
+                            id="username"
+                            label="UserName"
+                            floatinglabeltext="UserName"
+                            error={this.state.errUser}
+                            helperText={this.state.userText}
+                            onChange={(event) => (this.validateUsername(event))}
+                            margin="normal"
+                            className={classes.InputField}
+                        />
+                    </div>
+                    <div>
+                        <TextField
+                            id="email"
+                            required
+                            label="Email"
+                            type="email"
+                            floatinglabeltext="Email"
+                            error={this.state.errEmail}
+                            helperText={this.state.emailText}
+                            onChange={(event) => (this.validateEmail(event))}
+                            margin="normal"
+                            className={classes.InputField}
+                        />
+                    </div>
+                    <div>
+                        <TextField
+                            id="password"
+                            required
+                            type="password"
+                            label="Password"
+                            floatinglabeltext="Password"
+                            error={this.state.errPassword}
+                            helperText={this.state.passwordText}
+                            onChange={(event) => (this.validatePassword(event))}
+                            margin="normal"
+                            className={classes.InputField}
+                        />
+                    </div>
+                    <div>
+                        <TextField
+                            id="password_verify"
+                            required
+                            type="password"
+                            label="Enter Password Again"
+                            error={this.state.errPasswordVer}
+                            helperText={this.state.passwordVerText}
+                            floatinglabeltext="Password"
+                            onChange={(event) => (this.validatePasswordVer(event))}
+                            margin="normal"
+                            className={classes.InputField}
+                        />
+                    </div>
+                    <div>
+                        <Button disabled={!this.state.isValid} variant="raised" color='secondary'
+                                onClick={(event) => this.handleClick(event)} className={classes.Button}>
+                            Submit
+                        </Button>
+                    </div>
 
-            <div className={classes["user-form"]}>
-                <Card>
-                    <CardContent className={classes["signup-card"]}>
-                        <form>
-                            <TextField
-                                required
-                                id="username"
-                                label="UserName"
-                                floatinglabeltext="UserName"
-                                error={this.state.errUser}
-                                helperText={this.state.userText}
-                                onChange={(event) => (this.validateUsername(event))}
-                                margin="normal"
-                            />
-                            <br/>
-                            <TextField
-                                id="email"
-                                required
-                                label="Email"
-                                type="email"
-                                floatinglabeltext="Email"
-                                error={this.state.errEmail}
-                                helperText={this.state.emailText}
-                                onChange = {(event) => (this.validateEmail(event))}
-                                margin="normal"
-                            />
-                            <br/>
-                            <TextField
-                                id="password"
-                                required
-                                type="password"
-                                label="Password"
-                                floatinglabeltext="Password"
-                                error={this.state.errPassword}
-                                helperText={this.state.passwordText}
-                                onChange = {(event) => (this.validatePassword(event))}
-                                margin="normal"
-                            />
-                            <br/>
-                            <TextField
-                                id="password_verify"
-                                required
-                                type="password"
-                                label="Enter Password Again"
-                                error={this.state.errPasswordVer}
-                                helperText={this.state.passwordVerText}
-                                floatinglabeltext="Password"
-                                onChange = {(event) => (this.validatePasswordVer(event))}
-                                margin="normal"
-                            />
-                            <br/>
-                            <br/>
-                            <Button disabled={!this.state.isValid} variant="raised" color='secondary' onClick={(event) => this.handleClick(event)}>
-                                Submit
-                            </Button>
-                        </form>
-                    </CardContent>
-                </Card>
+
+                </form>
             </div>
         );
     }// end of render
@@ -201,4 +235,4 @@ const mapDispatchToProps = dispatch => {
     };
 
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(Signup));

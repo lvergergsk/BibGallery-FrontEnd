@@ -3,20 +3,21 @@ import PropTypes from 'prop-types';
 import {withStyles} from 'material-ui/styles';
 import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import IconButton from 'material-ui/IconButton';
-import AccountCircle from 'material-ui-icons/AccountCircle';
-import Switch from 'material-ui/Switch';
-import {FormControlLabel} from 'material-ui/Form';
-import Menu, {MenuItem} from 'material-ui/Menu';
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 
+
 import Logo from '../../components/Logo/Logo'
+import SearchBar from "./SearchBar";
+import {Button} from "material-ui";
+import ReactAux from "../../hoc/ReactAux/ReactAux";
 
 const styles = {
     appBar: {
-        backgroundColor: "transparent",
+        backgroundColor: 'transparent',
+    },
+    toolBar: {
+        padding: '50px',
     },
     flex: {
         flex: 1,
@@ -25,79 +26,67 @@ const styles = {
         marginLeft: -12,
         marginRight: 20,
     },
+    searchBar: {
+        bolderStyle: 'solid',
+        marginLeft: '150px',
+    },
+    buttonGroup: {
+        marginLeft: 'auto',
+    },
+    button: {
+        margin: '5px',
+    }
+
 };
 
 class Header extends React.Component {
-    state = {
-        anchorEl: null,
-    };
-
-    handleChange = (event, checked) => {
-        if (checked) {
-            return this.props.onLogin();
-        } else {
-            return this.props.onLogout();
-        }
-    };
-
-    handleMenu = event => {
-        this.setState({anchorEl: event.currentTarget});
-    };
-
-    handleClose = () => {
-        this.setState({anchorEl: null});
-    };
 
     render() {
+        console.log(this.props.JWT);
         const {classes} = this.props;
-        const {anchorEl} = this.state;
-        const open = Boolean(anchorEl);
-        console.log("valueAuth: " + this.props.auth);
-        console.log("value: " + this.props.apiBaseUrl);
         return (
             <AppBar position="static" className={classes.appBar}>
                 <Toolbar>
-                    <Link to="/"><Logo/></Link>
-                    <Typography type="title" color="inherit" className={classes.flex}>
-                        BibGallery
-                    </Typography>
-                    {this.props.auth && (
-                        <div>
-                            <IconButton
-                                aria-owns={open ? 'menu-appbar' : null}
-                                aria-haspopup="true"
-                                onClick={this.handleMenu}
-                                color="inherit"
-                            >
-                                <AccountCircle/>
-                            </IconButton>
-                            <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorEl}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={open}
-                                onClose={this.handleClose}
-                            >
-                                <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                                <MenuItem onClick={this.handleClose}>My account</MenuItem>
-                            </Menu>
-                        </div>
-                    )}
-                    <FormControlLabel
-                        control={
-                            <Switch checked={this.props.auth} onChange={this.handleChange} aria-label="LoginSwitch"/>
+                    <Link to="/" style={{textDecoration: 'none'}}><Logo/></Link>
+                    {
+                        this.props.JWT === null ? null :
+                            <div className={classes.searchBar}>
+                                <SearchBar/>
+                            </div>
+                    }
+                    <div className={classes.buttonGroup}>
+                        {
+                            this.props.JWT === null ? (
+                                <ReactAux>
+                                    <Link to="/Signin" style={{textDecoration: 'none'}}>
+                                        <Button variant="raised" color="primary" className={classes.button}>
+                                            Sign in
+                                        </Button>
+                                    </Link>
+                                    <Link to="/Signup" style={{textDecoration: 'none'}}>
+                                        <Button variant="raised" color="primary" className={classes.button}>
+                                            Sign up
+                                        </Button>
+                                    </Link>
+                                </ReactAux>
+                            ) : null
                         }
-                        label={this.props.auth ? 'Logout' : 'Login'}
-
-                    />
-
+                        {
+                            this.props.JWT === null ? null :
+                                <ReactAux>
+                                    <Link to="/" style={{textDecoration: 'none'}}>
+                                        <Button variant="raised" color="primary" className={classes.button} onClick={this.props.onLogout}>
+                                            Sign out
+                                        </Button>
+                                    </Link>
+                                    <Link to="/query" style={{textDecoration: 'none'}}>
+                                        <Button variant="raised" color="primary" className={classes.button}>
+                                            Query Page
+                                        </Button>
+                                    </Link>
+                                </ReactAux>
+                        }
+                    </div>
                 </Toolbar>
             </AppBar>
         );
@@ -110,14 +99,12 @@ Header.propTypes = {
 
 const mapStateToProps = state => {
     return {
-        auth: state.auth,
-        apiBaseUrl: state.apiBaseUrl
+        JWT: state.JWT,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onLogin: () => dispatch({type: 'LOGIN'}),
         onLogout: () => dispatch({type: 'LOGOUT'})
     };
 };

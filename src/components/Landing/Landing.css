@@ -23,3 +23,15 @@ img.bg {
     top: 0;
     left: 0;
 }
+
+.Logo {
+    padding: 24px;
+    height: 150px;
+    font-family: cursive;
+    font-size: 70px;
+}
+
+.Logo img {
+    height: 100%;
+    padding: 10px;
+}
