@@ -91,7 +91,7 @@ class Signin extends React.Component {
                             />
                         </div>
                         <div>
-                            <Button className={classes.Button} color="secondary" variant="raised"
+                            <Button className={classes.Button} color="primary" variant="raised"
                                     onClick={() => this.handleClick()}>
                                 Submit
                             </Button>

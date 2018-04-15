@@ -209,7 +209,7 @@ class Signup extends React.Component {
                         />
                     </div>
                     <div>
-                        <Button disabled={!this.state.isValid} variant="raised" color='secondary'
+                        <Button disabled={!this.state.isValid} variant="raised" color='primary'
                                 onClick={(event) => this.handleClick(event)} className={classes.Button}>
                             Submit
                         </Button>
