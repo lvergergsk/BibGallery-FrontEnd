@@ -1,18 +1,45 @@
-.signin-card{
-    margin : auto;
-    max-Width : 145px;
-    width : 100px;
+.signin-card {
+    margin: auto;
+    max-Width: 145px;
+    width: 100px;
 }
 
-.user-form{
+.user-form {
     padding-top: 10px;
 }
 
-.button-color{
-   color: #5384DE;
+.button-color {
+    padding: 20px;
 }
 
-.signup-card{
+.signup-card {
     max-width: 345px;
-    margin : auto;
+    margin: auto;
+}
+
+.loginForm {
+    display: flex;
+    justify-content: center;
+    padding-top: 30px;
+}
+
+.Logo {
+    padding: 24px;
+    height: 150px;
+    font-family: cursive;
+    font-size: 60px;
+}
+
+.Logo img {
+    height: 100%;
+    padding: 10px;
+}
+
+.inputField {
+    display: block;
+}
+
+.button{
+    margin: 20px;
+    padding: 100px;
 }

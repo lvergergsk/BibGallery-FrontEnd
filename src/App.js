@@ -38,9 +38,9 @@ class App extends Component {
                             <Route path="/query" exact component={QueryInterface}/>
                             <Route path="/signin" exact component={Signin}/>
                             <Route path="/signup" exact component={Signup}/>
-                            {this.props.auth &&
-                            <Route path="/query" component={QueryInterface}/>
-                            }
+                            {/*{this.props.auth &&*/}
+                            {/*<Route path="/query" component={QueryInterface}/>*/}
+                            {/*}*/}
 
                         </div>
 

@@ -8,8 +8,8 @@ import {Provider} from 'react-redux'
 import './css/index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import allReducers from './reducers/reducer'
+import reducer from './store/reducer'
 
-const store = createStore(allReducers);
+const store = createStore(reducer);
 ReactDOM.render(<Provider store={store}><App/></Provider>, document.getElementById('root'));
 registerServiceWorker();
