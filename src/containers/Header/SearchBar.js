@@ -21,9 +21,8 @@ const styles = {
         position: 'absolute',
         height: '100%',
         textAlign: 'center',
-        borderRadius: '5px',
-        cursor: 'pointer',
-        fontSize: '20px'
+        fontSize: '20px',
+        marginLeft: '10px',
     },
     icon: {
         padding: '5px'
