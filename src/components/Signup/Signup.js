@@ -70,7 +70,7 @@ class Signup extends React.Component {
     validateEmail(event) {
         let input = event.target.value;
         // let EMAIL_PATTERN = '/^\\S+@\\S+\.\\S+$/';
-        let EMAIL_PATTERN = '';
+        let EMAIL_PATTERN = '/^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$/';
         if (input.match(EMAIL_PATTERN)) {
             this.setState({errEmail: true});
             this.setState({emailText: "emails must have the format of xxx@xxxx.xx"});
@@ -123,6 +123,9 @@ class Signup extends React.Component {
     handleClick() {
         var apiBaseUrl = "http://localhost:3001/";
         console.log("values", this.state.username, this.state.password, this.state.email);
+        const setJWT = this.props.onLogin;
+        const history = this.props.history;
+
 
         var payload = {
             "username": this.state.username,
@@ -134,12 +137,9 @@ class Signup extends React.Component {
                 console.log(response);
                 if (response.data.success === true) {
                     console.log("registration successfull");
-                    return this.props.onLogin();
+                    setJWT(response.data.JWT);
+                    history.push({pathname: '/query'});
                 }
-            })
-            .catch(function (error) {
-                console.log(error);
-                return this.props.onLogout();
             });
     }
 
@@ -230,8 +230,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onLogin: () => dispatch({type: 'LOGIN'}),
-        onLogout: () => dispatch({type: 'LOGOUT'})
+        onLogin: (JWT) => dispatch({type: 'LOGIN', JWT: JWT}),
     };
 
 };

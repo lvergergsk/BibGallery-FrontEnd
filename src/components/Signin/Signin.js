@@ -120,7 +120,6 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         onLogin: (JWT) => dispatch({type: 'LOGIN', JWT: JWT}),
-        onLogout: () => dispatch({type: 'LOGOUT'})
     };
 
 };
