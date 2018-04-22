@@ -5,6 +5,7 @@ import axios from 'axios';
 import {connect} from 'react-redux';
 import {withStyles} from "material-ui/styles/index";
 import bookLogo from '../../assets/images/book-logo.png';
+import * as actions from '../../store/actions'
 
 const styles = {
     Logo: {
@@ -115,14 +116,14 @@ class Signup extends React.Component {
 
     isValid() {
         if (!this.state.errEmail && !this.state.errUser && !this.state.errPassword && !this.state.errPasswordVer) {
-            console.log(!this.state.errEmail && !this.state.errUser && !this.state.errPassword);
+            // console.log(!this.state.errEmail && !this.state.errUser && !this.state.errPassword);
             this.setState({isValid: true});
         }
     }
 
     handleClick() {
         var apiBaseUrl = "http://localhost:3001/";
-        console.log("values", this.state.username, this.state.password, this.state.email);
+        // console.log("values", this.state.username, this.state.password, this.state.email);
         const setJWT = this.props.onLogin;
         const history = this.props.history;
 
@@ -134,9 +135,8 @@ class Signup extends React.Component {
         };
         axios.post(apiBaseUrl + 'register', payload)
             .then(function (response) {
-                console.log(response);
                 if (response.data.success === true) {
-                    console.log("registration successfull");
+                    // console.log("registration successfull");
                     setJWT(response.data.JWT);
                     history.push({pathname: '/query'});
                 }
@@ -230,7 +230,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onLogin: (JWT) => dispatch({type: 'LOGIN', JWT: JWT}),
+        onLogin: (JWT) => dispatch({type: actions.LOGIN, JWT: JWT}),
     };
 
 };

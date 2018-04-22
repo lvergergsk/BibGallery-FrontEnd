@@ -7,6 +7,7 @@ import {connect} from 'react-redux';
 import serverConfig from '../../serverConfig';
 import bookLogo from '../../assets/images/book-logo.png';
 import {withStyles} from "material-ui/styles/index";
+import * as actions from '../../store/actions';
 
 const styles = {
     Logo: {
@@ -74,7 +75,6 @@ class Signin extends React.Component {
                                 floatinglabeltext="Username"
                                 onChange={(event) => this.setState({username: event.target.value})}
                                 margin="normal"
-                                inputStyle={{textAlign: 'center'}}
                                 className={classes.InputField}
                             />
                         </div>
@@ -119,7 +119,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onLogin: (JWT) => dispatch({type: 'LOGIN', JWT: JWT}),
+        onLogin: (JWT) => dispatch({type: actions.LOGIN, JWT: JWT}),
     };
 
 };
