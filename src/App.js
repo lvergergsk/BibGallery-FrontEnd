@@ -17,8 +17,24 @@ import Signup from './components/Signup/Signup'
 import Test from './testExpansionPanel'
 import {connect} from "react-redux";
 import serverConfig from "./serverConfig";
+import * as actions from "./store/actions";
 
 const theme = createMuiTheme();
+
+// const renderMergedProps = (component, ...rest) => {
+//     const finalProps = Object.assign({}, ...rest);
+//     return (
+//         React.createElement(component, finalProps)
+//     );
+// }
+//
+// const PropsRoute = ({ component, ...rest }) => {
+//     return (
+//         <Route {...rest} render={routeProps => {
+//             return renderMergedProps(component, routeProps, rest);
+//         }}/>
+//     );
+// }
 
 class App extends Component {
 
@@ -39,13 +55,18 @@ class App extends Component {
             }
         };
 
+        let onSetPublications = this.props.onSetPublications
         axios.post(serverConfig.backendUrl + 'search', publicationSearch)
             .then(function (response) {
-                console.log(response);
-            })
+                console.log(response.data.result.rows);
+                onSetPublications(response.data.result.rows);
+            });
 
-        console.log(this.props.keyword);
+        // Modern Database Systems
+    }
 
+    setPublications(publications) {
+        this.setState({publications: publications});
     }
 
 
@@ -63,7 +84,7 @@ class App extends Component {
                             <Route path="/signup" exact component={Signup}/>
                             <Route path="/test" exact component={Test}/>
                             {/*{this.props.auth &&*/}
-                            {/*<Route path="/query" component={QueryInterface}/>*/}
+                            {/*<Route path="/query" c1omponent={QueryInterface}/>*/}
                             {/*}*/}
 
                         </div>
@@ -85,8 +106,9 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = dispatch => {
-    return {};
-
+    return {
+        onSetPublications: (publications) => dispatch({type: actions.SETPUBLICATIONS, publications: publications}),
+    };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
