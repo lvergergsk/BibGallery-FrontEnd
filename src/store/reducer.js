@@ -6,7 +6,9 @@ const initialState = {
     keyword: '',
     yearFrom: 0,
     yearTo: 2019,
-    writtenBy: ''
+    writtenBy: '',
+    publications:[],
+    authors:[]
 };
 
 const reducer = (state = initialState, action) => {
@@ -36,13 +38,18 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 yearFrom: yearFrom
-            }
+            };
         case actions.SETYEARTO:
             const yearTo = action.yearTo === '' ? 2018 : Number(action.yearTo);
             return {
                 ...state,
                 yearTo: yearTo
-            }
+            };
+        case actions.SETPUBLICATIONS:
+            return{
+                ...state,
+                publications:action.publications
+            };
         default:
             return state;
     }

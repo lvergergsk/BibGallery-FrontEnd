@@ -40,10 +40,10 @@ class QueryInterface extends Component {
         // do some initialization
     }
 
+
     render() {
         const {classes} = this.props;
         const {value} = this.state;
-
         return (
             <div className={classes.root}>
                 {/*<ProtectedRoute/>*/}

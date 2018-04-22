@@ -45,29 +45,35 @@ class PublicationQueryResult extends React.Component {
         return (
             <ExpansionPanel>
                 <ExpansionPanelSummary>
-                    <Typography className={classes.heading}>{publication.type}</Typography>
-                    <Typography className={classes.secondaryHeading}>{publication.title}</Typography>
+                    <Typography className={classes.heading}>{publication.TYPE}</Typography>
+                    <Typography className={classes.secondaryHeading}>{publication.TITLE}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.detail}>
                     <div className={classes.column}>
                         <div>
+                            <h4 className={classes.fieldTitle}>Publication Id:</h4>
+                            {publication.ID}
+                        </div>
+                        <br/>
+                        <Divider/>
+                        <div>
                             <h4 className={classes.fieldTitle}>Year:</h4>
-                            {publication.year}
+                            {publication.YEAR}
                         </div>
                         <br/>
                         <Divider/>
                         <div>
                             <h4 className={classes.fieldTitle}>Author:</h4>
-                            {publication.authors.map(function (author, key) {
-                                return (<div key={key}>{author}</div>)
-                            })}
+                            {/*{publication.authors.map(function (author, key) {*/}
+                                {/*return (<div key={key}>{author}</div>)*/}
+                            {/*})}*/}
                         </div>
                     </div>
                     <div className={classNames(classes.column, classes.helper)}>
                         <h4 className={classes.fieldTitle}>cites:</h4>
-                        {publication.cited.map(function (cite, key) {
-                            return (<div key={key}>{cite}</div>)
-                        })}
+                        {/*{publication.cited.map(function (cite, key) {*/}
+                            {/*return (<div key={key}>{cite}</div>)*/}
+                        {/*})}*/}
                     </div>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
