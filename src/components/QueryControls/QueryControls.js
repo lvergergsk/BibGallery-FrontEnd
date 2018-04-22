@@ -1,22 +1,21 @@
 import React from 'react'
-
 // Others:
-import QueryControl from './QueryControl/QueryControl'
+import YearConstraint from './YearConstraint'
+import AuthorConstraint from './AuthorConstraint'
+import TypeConstraint from './TypeConstraint'
+import AuthorOrderConstraint from './AuthorOrderConstraint'
+import PublicationOrderConstraint from './PublicationOrderConstraint'
 import ReactAux from '../../hoc/ReactAux/ReactAux'
 
 
 const QueryControls = (props) => (
     <ReactAux>
-        <QueryControl/>
-        <QueryControl/>
-        <QueryControl/>
-        <QueryControl/>
-        <QueryControl/>
-        <QueryControl/>
-        <QueryControl/>
-        <QueryControl/>
+        {props.display === 0 ? <YearConstraint/> : null}
+        {props.display === 0 ? <AuthorConstraint/> : null}
+        {props.display === 0 ? <TypeConstraint/> : null}
+        <AuthorOrderConstraint/>
+        <PublicationOrderConstraint/>
     </ReactAux>
-
 )
 
 export default QueryControls

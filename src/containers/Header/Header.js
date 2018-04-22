@@ -11,6 +11,7 @@ import Logo from '../../components/Logo/Logo'
 import SearchBar from "./SearchBar";
 import {Button} from "material-ui";
 import ReactAux from "../../hoc/ReactAux/ReactAux";
+import * as actions from '../../store/actions'
 
 const styles = {
     appBar: {
@@ -42,7 +43,6 @@ const styles = {
 class Header extends React.Component {
 
     render() {
-        console.log(this.props.JWT);
         const {classes} = this.props;
         return (
             <AppBar position="static" className={classes.appBar}>
@@ -51,7 +51,7 @@ class Header extends React.Component {
                     {
                         this.props.JWT === null ? null :
                             <div className={classes.searchBar}>
-                                <SearchBar/>
+                                <SearchBar onClickSearch={this.props.onClickSearch}/>
                             </div>
                     }
                     <div className={classes.buttonGroup}>
@@ -105,7 +105,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onLogout: () => dispatch({type: 'LOGOUT'})
+        onLogout: () => dispatch({type: actions.LOGOUT})
     };
 };
 
