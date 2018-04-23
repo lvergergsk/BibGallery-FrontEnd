@@ -2,13 +2,23 @@ import * as actions from './actions';
 
 const initialState = {
     // JWT: null,
-    JWT:'something',
-    keyword: '',
-    yearFrom: 0,
-    yearTo: 2019,
-    writtenBy: '',
-    publications:[],
-    authors:[]
+    JWT: 'something',
+    publications: [],
+    publicationSearch: {
+        type: 'pub',
+        pubtype: ['incollection', 'book', 'inproceeding', 'proceeding', 'article'],
+        params: {
+            offset: 0,
+            num: 20
+        },
+        order: {
+            type: "year",
+            order: "ASC"
+        }
+    },
+    authors: [],
+    publicationsHasMore: true,
+
 };
 
 const reducer = (state = initialState, action) => {
@@ -24,32 +34,83 @@ const reducer = (state = initialState, action) => {
                 JWT: null,
             };
         case actions.SETKEYWORD:
+            if (action.keyword === '') delete state.publicationSearch.params.title;
+            else state.publicationSearch.params.title = action.keyword;
             return {
                 ...state,
-                keyword: action.keyword,
             };
         case actions.SETWRITTENBY:
+            state.publicationSearch.params.person = action.writtenBy;
             return {
                 ...state,
-                writtenBy: action.writtenBy,
             };
         case actions.SETYEARFROM:
-            const yearFrom = action.yearFrom === '' ? 0 : Number(action.yearFrom);
+            if (action.yearFrom === '') delete state.publicationSearch.params.yearbegin;
+            else state.publicationSearch.params.yearbegin = action.yearFrom;
             return {
                 ...state,
-                yearFrom: yearFrom
             };
         case actions.SETYEARTO:
-            const yearTo = action.yearTo === '' ? 2018 : Number(action.yearTo);
+            if (action.yearTo === '') delete state.publicationSearch.params.yearto;
+            else state.publicationSearch.params.yearto = action.yearTo;
             return {
                 ...state,
-                yearTo: yearTo
             };
         case actions.SETPUBLICATIONS:
-            return{
+            state.publicationsHasMore=true;
+            state.publications = action.publications.sort(function (a, b) {
+                return a.RN - b.RN
+            });
+            console.log(state.publications)
+            return {
                 ...state,
-                publications:action.publications
             };
+        case actions.CONCATPUBLICATIONS:
+            if (action.publications.length === 0) state.publicationsHasMore = false;
+            else {
+                state.publications = state.publications.concat(action.publications).sort(function (a, b) {
+                    return a.RN - b.RN
+                });
+            }
+            return {
+                ...state,
+            };
+        case actions.NEXTPUBLICATIONLOAD:
+            state.currentPublicationSearch.params.offset += state.currentPublicationSearch.params.num;
+            return {
+                ...state,
+            };
+        case actions.RESETPUBLICATIONOFFSET:
+            state.publicationSearch.params.offset = 0;
+            return {
+                ...state,
+            };
+        case actions.RESETPUBLICATIONS:
+            return {
+                ...state,
+                publications: [],
+            };
+        case actions.SETPUBLICATIONTYPE:
+            state.publicationSearch.pubtype = action.publicationType;
+            return {
+                ...state
+            };
+        case actions.SAVECURRENTPUBLICATIONSEARCH:
+            console.log(state.publicationSearch);
+            return {
+                ...state,
+                currentPublicationSearch: JSON.parse(JSON.stringify(state.publicationSearch)),
+            };
+        case actions.SETPUBLICATIONORDER:
+            state.publicationSearch.order = action.order;
+            return {
+                ...state,
+            };
+        case actions.SETDATABASEINFO:
+            return {
+                ...state,
+                databaseInfo: action.databaseInfo
+            }
         default:
             return state;
     }

@@ -1,46 +1,71 @@
 import React from 'react'
+import {connect} from "react-redux";
+import * as actions from "../../store/actions";
 
 import PublicationQueryResult from './PublicationQueryResult'
-import {connect} from "react-redux";
+import {withStyles} from "material-ui/styles/index";
+import axios from "axios/index";
+import serverConfig from "../../serverConfig";
+import {CircularProgress} from 'material-ui/Progress';
+
+import InfiniteScroll from 'react-infinite-scroller';
+import purple from 'material-ui/colors/purple';
+
+const styles = theme => ({
+    list: {
+        height: '84vh',
+        overflow: 'auto',
+        marginTop: '5px',
+        width: '100%',
+    },
+    initializeProgress: {
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%) translateX(-50%)',
+    },
+    progress: {
+        margin: theme.spacing.unit * 2,
+    },
+});
 
 class PublicationQueryResults extends React.Component {
-    state = {
-        // publications: [
-        //     {
-        //         publicationId: '001',
-        //         type: 'inProceeding',
-        //         parent: 'Proceeding title',
-        //         title: 'Title of publication 1',
-        //         year: '1995',
-        //         authors: ['author name 1', 'author name 2'],
-        //         cited: ['cited publication 1']
-        //     },
-        //     {
-        //         publicationId: '002',
-        //         type: 'inCollection',
-        //         parent: 'book title',
-        //         title: 'Title of publication 2',
-        //         year: '1999',
-        //         authors: ['author name 1', 'author name 2'],
-        //         cited: ['cited publication 1']
-        //     }
-        // ]
-    };
+    state = {};
 
-    constructor(props) {
-        super(props);
-        console.log(this.props.setPublications)
+    loadNext() {
+        this.props.onNextPublicationLoad();
+        let onConcatPublications = this.props.onConcatPublications;
+        // let onNextPublicationLoad = this.props.onNextPublicationLoad;
+        axios.post(serverConfig.backendUrl + 'search', this.props.currentPublicationSearch)
+            .then(function (response) {
 
+                onConcatPublications(response.data.result);
+                // onNextPublicationLoad();
+            })
     }
 
     render() {
-        return (
-            this.props.publications.map(publication => {
-                return <PublicationQueryResult
-                    key={publication.RN}
-                    publication={publication}
-                />
-            })
+        const {classes, publications} = this.props;
+        return (<div>
+                {publications.length === 0 ?
+                    (<div key={0}><CircularProgress className={classes.initializeProgress} size={100} thickness={2}
+                                                    style={{color: purple[500]}}/></div>) :
+                    (<div className={classes.list}>
+                        <InfiniteScroll
+                            pageStart={0}
+                            loadMore={this.loadNext.bind(this)}
+                            hasMore={this.props.publicationsHasMore}
+                            useWindow={false}
+                            loader={<div key={0}><CircularProgress className={classes.progress} size={100}
+                                                                   thickness={2}/></div>}>
+                            {this.props.publications.map(publication => {
+                                return <PublicationQueryResult
+                                    key={publication.RN}
+                                    publication={publication}
+                                />
+                            })}
+                        </InfiniteScroll>
+                    </div>)}
+            </div>
         )
     }
 }
@@ -48,12 +73,17 @@ class PublicationQueryResults extends React.Component {
 const mapStateToProps = state => {
     return {
         publications: state.publications,
+        currentPublicationSearch: state.currentPublicationSearch,
+        publicationsHasMore: state.publicationsHasMore,
     };
 };
 
 const mapDispatchToProps = dispatch => {
-    return {};
+    return {
+        onNextPublicationLoad: () => dispatch({type: actions.NEXTPUBLICATIONLOAD}),
+        onConcatPublications: (publications) => dispatch({type: actions.CONCATPUBLICATIONS, publications: publications})
+    };
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(PublicationQueryResults)
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(PublicationQueryResults))

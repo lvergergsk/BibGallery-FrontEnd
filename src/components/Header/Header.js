@@ -7,7 +7,7 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 
 
-import Logo from '../../components/Logo/Logo'
+import Logo from '../Logo/Logo'
 import SearchBar from "./SearchBar";
 import {Button} from "material-ui";
 import ReactAux from "../../hoc/ReactAux/ReactAux";
