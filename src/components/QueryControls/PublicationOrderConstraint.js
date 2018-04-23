@@ -5,6 +5,8 @@ import Card, {CardContent} from 'material-ui/Card';
 import Typography from 'material-ui/Typography';
 import Select from 'material-ui/Select';
 import {MenuItem} from 'material-ui/Menu';
+import * as actions from "../../store/actions";
+import {connect} from "react-redux";
 
 
 const styles = theme => ({
@@ -33,7 +35,17 @@ class PublicationOrderConstraint extends React.Component {
         type: 0,
     };
     handleChange = event => {
-        this.setState({[event.target.name]: event.target.value});
+        this.setState({[event.target.name]: event.target.value}, function () {
+            switch (this.state.type) {
+                case 0:
+                    this.props.onSetPublicationOrder({type: 'year', order: 'ASC'});
+                    break;
+                case 1:
+                    this.props.onSetPublicationOrder({type: 'year', order: 'DESC'});
+                    break;
+                default:
+            }
+        });
     };
 
 
@@ -68,4 +80,15 @@ PublicationOrderConstraint.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PublicationOrderConstraint);
+const mapStateToProps = state => {
+    return {};
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onSetPublicationOrder: (order) => dispatch({type: actions.SETPUBLICATIONORDER, order: order}),
+    };
+
+};
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(PublicationOrderConstraint));

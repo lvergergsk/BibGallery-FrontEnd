@@ -7,17 +7,18 @@ import {BrowserRouter, Route} from 'react-router-dom';
 import axios from 'axios';
 
 
-import Header from './containers/Header/Header';
+import Header from './components/Header/Header';
 import Landing from './components/Landing/Landing'
-import QueryInterface from './containers/QueryInterface/QueryInterface'
+import QueryInterface from './components/QueryInterface/QueryInterface'
 import Signin from './components/Signin/Signin'
 import Signup from './components/Signup/Signup'
-
-
 import Test from './testExpansionPanel'
+
 import {connect} from "react-redux";
 import serverConfig from "./serverConfig";
 import * as actions from "./store/actions";
+import Snackbar from 'material-ui/Snackbar';
+import Slide from 'material-ui/transitions/Slide';
 
 const theme = createMuiTheme();
 
@@ -37,38 +38,39 @@ const theme = createMuiTheme();
 // }
 
 class App extends Component {
+    state = {
+        open: false,
+        transition: null,
+    };
 
+
+    handleClose = () => {
+        this.setState({ open: false });
+    };
+    TransitionUp(props) {
+        return <Slide direction="up" {...props} />;
+    }
     onClickSearch() {
-        const publicationSearch = {
-            "type": "pub",
-            "pubtype": ["incollection", "book"],
-            "params": {
-                "title": this.props.keyword,
-                "yearbegin": this.props.yearFrom,
-                "yearend": this.props.yearTo,
-                "offset": 0,
-                "num": 10
-            },
-            "order": {
-                "type": "year",
-                "order": "ASC"
-            }
-        };
+        if (this.props.publicationSearch.pubtype.length === 0) {
+            this.setState({ open: true, transition:this.TransitionUp});
+            return;
+        }
 
-        let onSetPublications = this.props.onSetPublications
-        axios.post(serverConfig.backendUrl + 'search', publicationSearch)
+        this.props.onSaveCurrentPublicationSearch();
+        this.props.onResetPublicationOffset();
+        this.props.onResetPublications();
+        let onSetPublications = this.props.onSetPublications;
+        axios.post(serverConfig.backendUrl + 'search', this.props.publicationSearch)
             .then(function (response) {
-                console.log(response.data.result.rows);
-                onSetPublications(response.data.result.rows);
+                onSetPublications(response.data.result);
             });
 
         // Modern Database Systems
     }
 
-    setPublications(publications) {
-        this.setState({publications: publications});
+    componentDidMount() {
+        this.onClickSearch();
     }
-
 
     render() {
         return (
@@ -86,9 +88,16 @@ class App extends Component {
                             {/*{this.props.auth &&*/}
                             {/*<Route path="/query" c1omponent={QueryInterface}/>*/}
                             {/*}*/}
-
                         </div>
-
+                        <Snackbar
+                            open={this.state.open}
+                            onClose={this.handleClose}
+                            transition={this.state.transition}
+                            SnackbarContentProps={{
+                                'aria-describedby': 'message-id',
+                            }}
+                            message={<span id="message-id">Please select publication type.</span>}
+                        />
                     </div>
                 </BrowserRouter>
             </MuiThemeProvider>
@@ -99,15 +108,16 @@ class App extends Component {
 
 const mapStateToProps = state => {
     return {
-        keyword: state.keyword,
-        yearFrom: state.yearFrom,
-        yearTo: state.yearTo,
+        publicationSearch: state.publicationSearch,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
+        onResetPublicationOffset: () => dispatch({type: actions.RESETPUBLICATIONOFFSET}),
+        onResetPublications: () => dispatch({type: actions.RESETPUBLICATIONS}),
         onSetPublications: (publications) => dispatch({type: actions.SETPUBLICATIONS, publications: publications}),
+        onSaveCurrentPublicationSearch: () => dispatch({type: actions.SAVECURRENTPUBLICATIONSEARCH}),
     };
 };
 

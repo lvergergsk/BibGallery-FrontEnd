@@ -7,9 +7,9 @@ import Grid from 'material-ui/Grid';
 import Tabs, {Tab} from 'material-ui/Tabs';
 import Paper from 'material-ui/Paper';
 // Other:
-import PublicationQueryResults from '../../components/QueryResults/PublicationQueryResults';
-import AuthorQueryResults from '../../components/QueryResults/AuthorQueryResults'
-import QueryControls from '../../components/QueryControls/QueryControls';
+import PublicationQueryResults from '../QueryResults/PublicationQueryResults';
+import AuthorQueryResults from '../QueryResults/AuthorQueryResults'
+import QueryControls from '../QueryControls/QueryControls';
 // import ProtectedRoute from '../../components/ProtectedRoute/ProtectedRoute'
 
 
@@ -24,7 +24,10 @@ const styles = theme => ({
     },
     button: {
         padding: 5,
-    }
+    },
+    tab: {
+        width: '30%',
+    },
 });
 
 class QueryInterface extends Component {
@@ -51,13 +54,14 @@ class QueryInterface extends Component {
                     <Grid item xs={9} sm={9}>
                         <Paper>
                             <Tabs
+                                className={classes.tabs}
                                 value={this.state.value}
                                 onChange={this.handleChange}
                                 indicatorColor="primary"
                                 textColor="primary"
                                 centered>
-                                <Tab label="Publications"/>
-                                <Tab label="Authors"/>
+                                <Tab className={classes.tab} label="Publications"/>
+                                <Tab className={classes.tab} label="Authors"/>
                             </Tabs>
                         </Paper>
                         {value === 0 && <PublicationQueryResults/>}
