@@ -45,26 +45,36 @@ class App extends Component {
 
 
     handleClose = () => {
-        this.setState({ open: false });
+        this.setState({open: false});
     };
+
     TransitionUp(props) {
         return <Slide direction="up" {...props} />;
     }
+
     onClickSearch() {
         if (this.props.publicationSearch.pubtype.length === 0) {
-            this.setState({ open: true, transition:this.TransitionUp});
+            this.setState({open: true, transition: this.TransitionUp});
             return;
         }
 
         this.props.onSaveCurrentPublicationSearch();
+        this.props.onSaveCurrentAuthorSearch();
         this.props.onResetPublicationOffset();
         this.props.onResetPublications();
+        this.props.onResetAuthorOffset();
+        this.props.onResetAuthors();
         let onSetPublications = this.props.onSetPublications;
+        let onSetAuthors = this.props.onSetAuthors;
         axios.post(serverConfig.backendUrl + 'search', this.props.publicationSearch)
             .then(function (response) {
-                onSetPublications(response.data.result);
+                onSetPublications(response.data.result, response.data.count);
             });
 
+        axios.post(serverConfig.backendUrl + 'search', this.props.authorSearch)
+            .then(function (response) {
+                onSetAuthors(response.data.result, response.data.count);
+            });
         // Modern Database Systems
     }
 
@@ -109,6 +119,7 @@ class App extends Component {
 const mapStateToProps = state => {
     return {
         publicationSearch: state.publicationSearch,
+        authorSearch: state.authorSearch,
     };
 };
 
@@ -116,8 +127,20 @@ const mapDispatchToProps = dispatch => {
     return {
         onResetPublicationOffset: () => dispatch({type: actions.RESETPUBLICATIONOFFSET}),
         onResetPublications: () => dispatch({type: actions.RESETPUBLICATIONS}),
-        onSetPublications: (publications) => dispatch({type: actions.SETPUBLICATIONS, publications: publications}),
+        onResetAuthorOffset: () => dispatch({type: actions.RESETAUTHOROFFSET}),
+        onResetAuthors: () => dispatch({type: actions.RESETAUTHORS}),
+        onSetPublications: (publications, publicationCount) => dispatch({
+            type: actions.SETPUBLICATIONS,
+            publications: publications,
+            publicationCount: publicationCount
+        }),
         onSaveCurrentPublicationSearch: () => dispatch({type: actions.SAVECURRENTPUBLICATIONSEARCH}),
+        onSetAuthors: (authors, authorCount) => dispatch({
+            type: actions.SETAUTHORS,
+            authors: authors,
+            authorCount: authorCount
+        }),
+        onSaveCurrentAuthorSearch: () => dispatch({type: actions.SAVECURRENTAUTHORSEARCH}),
     };
 };
 

@@ -6,6 +6,10 @@ import Typography from 'material-ui/Typography';
 import classNames from 'classnames'
 import Divider from 'material-ui/Divider';
 import ReactAux from '../../hoc/ReactAux/ReactAux'
+import * as actions from "../../store/actions";
+import {connect} from "react-redux";
+import axios from "axios/index";
+import serverConfig from "../../serverConfig";
 
 const styles = theme => ({
     root: {
@@ -45,11 +49,96 @@ class PublicationQueryResult extends React.Component {
     isJsonString(str) {
         try {
             JSON.parse(str).map(function () {
+                return null;
             });
         } catch (e) {
             return false;
         }
         return true;
+    }
+
+    onClickJournal() {
+        this.props.onResetDerivedResults();
+        this.props.onSetDerivedResultsTabTitle(this.props.publication.JOURNAL);
+        this.props.onSetTabNumber(2);
+        let query = {
+            type: "pub",
+            pubtype: ['article'],
+            params: {
+                journal: this.props.publication.JOURNAL,
+                offset: 0,
+                num: 20
+            },
+            order: {
+                type: "year",
+                order: "DESC"
+            }
+        };
+
+        this.props.onSetDerivedQuery(query);
+        let onSetDerivedResults = this.props.onSetDerivedResults;
+        let onSetDerivedResultsCount = this.props.onSetDerivedResultsCount;
+        axios.post(serverConfig.backendUrl + 'search', query)
+            .then(function (response) {
+                onSetDerivedResults(response.data.result);
+                onSetDerivedResultsCount(response.data.count)
+            });
+    }
+
+    onClickBook() {
+        this.props.onResetDerivedResults();
+        this.props.onSetDerivedResultsTabTitle(this.props.publication.BOOKTITLE);
+        this.props.onSetTabNumber(2);
+        let query = {
+            type: "pub",
+            pubtype: ['incollection'],
+            params: {
+                bookid: this.props.publication.CROSSREF,
+                offset: 0,
+                num: 20
+            },
+            order: {
+                type: "year",
+                order: "DESC"
+            }
+        };
+
+        this.props.onSetDerivedQuery(query);
+        let onSetDerivedResults = this.props.onSetDerivedResults;
+        let onSetDerivedResultsCount = this.props.onSetDerivedResultsCount;
+        axios.post(serverConfig.backendUrl + 'search', query)
+            .then(function (response) {
+                onSetDerivedResults(response.data.result);
+                onSetDerivedResultsCount(response.data.count)
+            });
+    }
+
+    onClickProceeding() {
+        this.props.onResetDerivedResults();
+        this.props.onSetDerivedResultsTabTitle(this.props.publication.BOOKTITLE);
+        this.props.onSetTabNumber(2);
+        let query = {
+            type: "pub",
+            pubtype: ['inproceeding'],
+            params: {
+                proceedingid: this.props.publication.CROSSREF,
+                offset: 0,
+                num: 20
+            },
+            order: {
+                type: "year",
+                order: "DESC"
+            }
+        };
+
+        this.props.onSetDerivedQuery(query);
+        let onSetDerivedResults = this.props.onSetDerivedResults;
+        let onSetDerivedResultsCount = this.props.onSetDerivedResultsCount;
+        axios.post(serverConfig.backendUrl + 'search', query)
+            .then(function (response) {
+                onSetDerivedResults(response.data.result);
+                onSetDerivedResultsCount(response.data.count)
+            });
     }
 
     render() {
@@ -108,22 +197,24 @@ class PublicationQueryResult extends React.Component {
                         (publication.BOOKTITLE === undefined || publication.BOOKTITLE === null) ? null : (
                             <ReactAux>
                                 <Divider/>
-                                <h4 className={classes.fieldTitle}>Parent publication:</h4>
-                                <div style={{textAlign: 'left', marginLeft: '30%',}}>
-                                    {(publication.ID === undefined || publication.ID === null) ? null : (
-                                        <div>
-                                            Publication Id: {publication.ID}
-                                        </div>
-                                    )}
-                                    {(publication.JOURNAL === undefined || publication.JOURNAL === null) ? null : (
-                                        <div>
-                                            Journal: {publication.JOURNAL}
-                                        </div>)}
-                                    {(publication.BOOKTITLE === undefined || publication.BOOKTITLE === null) ? null : (
-                                        <div>
-                                            Book: {publication.BOOKTITLE}
-                                        </div>
-                                    )}
+                                {publication.TYPE === 'article' ? (
+                                    <h4 className={classes.fieldTitle}>Journal:
+                                        <a
+                                            onClick={this.onClickJournal.bind(this)}> {publication.JOURNAL}</a>
+                                    </h4>
+                                ) : null}
+                                {publication.TYPE === 'incollection' ? (
+                                    <h4 className={classes.fieldTitle}>Book: <a
+                                        onClick={this.onClickBook.bind(this)}>{publication.BOOKTITLE}</a></h4>
+                                ) : null}
+                                {publication.TYPE === 'inproceeding' ? (
+                                    <h4 className={classes.fieldTitle}>Proceeding:
+                                        <a onClick={this.onClickProceeding.bind(this)}>{publication.BOOKTITLE}</a></h4>
+                                ) : null}
+                                {publication.TYPE === 'proceeding' ? (
+                                    <h4 className={classes.fieldTitle}>Abbreviation: {publication.BOOKTITLE}</h4>
+                                ) : null}
+                                <div>
                                     {(publication.VOLUME === undefined || publication.VOLUME === null) ? null : (
                                         <div>
                                             Volume: {publication.VOLUME}
@@ -145,14 +236,14 @@ class PublicationQueryResult extends React.Component {
                         }
                     </div>
                     <div className={classNames(classes.column, classes.helper)}>
-                        {(publication.URL === undefined || publication.URL === null) ? null : (
+                        {(publication.EE === undefined || publication.EE === null) ? null : (
                             <ReactAux>
                                 <div>
                                     <h4 className={classes.fieldTitle}>URL:</h4>
-                                    {this.isJsonString(publication.URL) ?
-                                        JSON.parse(publication.URL).map(function (url) {
-                                            return (<div key={publication.URL.indexOf(url)}>{url}</div>)
-                                        }) : (<div>{publication.URL}</div>)}
+                                    {this.isJsonString(publication.EE) ?
+                                        JSON.parse(publication.EE).map(function (ee) {
+                                            return (<div key={publication.EE.indexOf(ee)}>{ee}</div>)
+                                        }) : (<div>{publication.EE}</div>)}
                                 </div>
                             </ReactAux>
                         )}
@@ -160,9 +251,11 @@ class PublicationQueryResult extends React.Component {
                             <ReactAux>
                                 <Divider/>
                                 <div>
-                                    <h4 className={classes.fieldTitle}>Author:</h4>
+                                    {publication.TYPE === 'book' || publication.TYPE === 'proceeding' ? (
+                                        <h4 className={classes.fieldTitle}>Editors:</h4>) : (
+                                        <h4 className={classes.fieldTitle}>Authors:</h4>)}
                                     {publication.AUTHOR.map(function (author) {
-                                        return (<div key={publication.AUTHOR.indexOf(author)}>{author}</div>)
+                                        return (<div key={publication.AUTHOR.indexOf(author)}>{author.NAME}</div>)
                                     })}
                                 </div>
                             </ReactAux>
@@ -178,4 +271,30 @@ PublicationQueryResult.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PublicationQueryResult);
+const mapStateToProps = state => {
+    return {derivedSearch: state.derivedSearch};
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onResetDerivedResults: () => dispatch({type: actions.RESETDERIVEDRESULTS}),
+        onSetDerivedQuery: (query) => {
+            dispatch({type: actions.SETDERIVEDQUERY, query: query})
+        },
+        onSetDerivedResults: (results) => {
+            dispatch({type: actions.SETDERIVEDRESULTS, results: results})
+        },
+        onSetTabNumber: (tabNumber) => dispatch({type: actions.SETTABNUMBER, tabNumber: tabNumber}),
+        onSetDerivedResultsCount: (derivedResultsCount) => dispatch({
+            type: actions.SETDERIVEDRESULTSCOUNT,
+            derivedResultsCount: derivedResultsCount
+        }),
+        onSetDerivedResultsTabTitle: (derivedResultTabTitle) => dispatch({
+            type: actions.SETDERIVEDRESULTSTABTITLE,
+            derivedResultTabTitle: derivedResultTabTitle
+        }),
+    };
+};
+
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(PublicationQueryResult));
