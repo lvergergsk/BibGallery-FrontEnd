@@ -60,9 +60,7 @@ class App extends Component {
 
         this.props.onSaveCurrentPublicationSearch();
         this.props.onSaveCurrentAuthorSearch();
-        this.props.onResetPublicationOffset();
         this.props.onResetPublications();
-        this.props.onResetAuthorOffset();
         this.props.onResetAuthors();
         let onSetPublications = this.props.onSetPublications;
         let onSetAuthors = this.props.onSetAuthors;
@@ -125,9 +123,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onResetPublicationOffset: () => dispatch({type: actions.RESETPUBLICATIONOFFSET}),
         onResetPublications: () => dispatch({type: actions.RESETPUBLICATIONS}),
-        onResetAuthorOffset: () => dispatch({type: actions.RESETAUTHOROFFSET}),
         onResetAuthors: () => dispatch({type: actions.RESETAUTHORS}),
         onSetPublications: (publications, publicationCount) => dispatch({
             type: actions.SETPUBLICATIONS,

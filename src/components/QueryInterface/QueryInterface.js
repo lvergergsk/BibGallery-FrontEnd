@@ -65,7 +65,12 @@ class QueryInterface extends Component {
                                             this.props.publicationCount === null) ? null :
                                             <span
                                                 className={classes.queryCount}>{this.props.publications.length} of {this.props.publicationCount}</span>}</div>}/>
-                                <Tab className={classes.tab} label="Authors"/>
+                                <Tab className={classes.tab} label={
+                                    <div>Authors
+                                        {(this.props.authorCount === undefined ||
+                                            this.props.authorCount === null) ? null :
+                                            <span
+                                                className={classes.queryCount}>{this.props.authors.length} of {this.props.authorCount}</span>}</div>}/>
                                 {this.props.derivedResultTabTitle === undefined ? null : (
                                     <Tab className={classes.tab} label={
                                         <div>{this.props.derivedResultTabTitle}
@@ -104,7 +109,8 @@ const mapStateToProps = state => {
         derivedResults: state.derivedResults,
         tabNumber: state.tabNumber,
         derivedResultTabTitle: state.derivedResultTabTitle,
-
+        authors:state.authors,
+        authorCount:state.authorCount,
     };
 };
 

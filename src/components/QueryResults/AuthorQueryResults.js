@@ -34,7 +34,6 @@ class AuthorQueryResults extends React.Component {
     loadNext() {
         this.props.onNextAuthorLoad();
         let onConcatAuthors = this.props.onConcatAuthors;
-        console.log(this.props.currentPublicationSearch);
         axios.post(serverConfig.backendUrl + 'search', this.props.currentAuthorSearch)
             .then(function (response) {
                 onConcatAuthors(response.data.result);
@@ -44,7 +43,7 @@ class AuthorQueryResults extends React.Component {
     render() {
         const {classes, authors} = this.props;
         return (<div>
-                {authors.length === 0 ?
+                {authors.length === 0 && this.props.authorsHasMore ?
                     (<div key={0}><CircularProgress className={classes.initializeProgress} size={100} thickness={2}
                                                     style={{color: purple[500]}}/></div>) :
                     (<div className={classes.list}>
@@ -72,14 +71,14 @@ const mapStateToProps = state => {
     return {
         authors: state.authors,
         authorsHasMore: state.authorsHasMore,
-        currentAuthorSearch:state.currentAuthorSearch,
+        currentAuthorSearch: state.currentAuthorSearch,
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         onNextAuthorLoad: () => dispatch({type: actions.NEXTAUTHORLOAD}),
-        onConcatAuthors: (publications) => dispatch({type: actions.CONCATAUTHORS, publications: publications})
+        onConcatAuthors: (authors) => dispatch({type: actions.CONCATAUTHORS, authors: authors})
     };
 };
 

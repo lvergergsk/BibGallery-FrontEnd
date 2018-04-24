@@ -143,6 +143,9 @@ class PublicationQueryResult extends React.Component {
 
     render() {
         const {classes, publication} = this.props;
+        let ISBN = publication.ISBN === undefined || publication.ISBN === null ? [] :
+            (this.isJsonString(publication.ISBN) ? JSON.parse(publication.ISBN) : [publication.ISBN]);
+        let citations = publication.CITATION === undefined || publication.CITATION === null ? [] : publication.CITATION;
         return (
             <ExpansionPanel>
                 <ExpansionPanelSummary>
@@ -183,6 +186,16 @@ class PublicationQueryResult extends React.Component {
                             {publication.ID}
                         </div>
                         <br/>
+                        {ISBN.length === 0 ? null : (<ReactAux>
+                            <Divider/>
+                            <div>
+                                <h4 className={classes.fieldTitle}>ISBN:</h4>
+                                {ISBN.map(function (isbn) {
+                                    return (<div key={ISBN.indexOf(isbn)}>{isbn}</div>)
+                                })}
+                            </div>
+                            <br/>
+                        </ReactAux>)}
                         {(publication.YEAR === undefined || publication.YEAR === null) ? null : (
                             <ReactAux>
                                 <Divider/>
@@ -260,6 +273,15 @@ class PublicationQueryResult extends React.Component {
                                 </div>
                             </ReactAux>
                         )}
+                        {citations.length === 0 ? null : (<ReactAux>
+                            <Divider/>
+                            <div>
+                                <h4 className={classes.fieldTitle}>Citation:</h4>
+                                {citations.map(function (citation) {
+                                    return (<div key={citations.indexOf(citation)}>{citation.NAME}</div>)
+                                })}
+                            </div>
+                        </ReactAux>)}
                     </div>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
