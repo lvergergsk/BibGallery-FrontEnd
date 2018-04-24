@@ -78,7 +78,8 @@ class PublicationQueryResult extends React.Component {
         this.props.onSetDerivedQuery(query);
         let onSetDerivedResults = this.props.onSetDerivedResults;
         let onSetDerivedResultsCount = this.props.onSetDerivedResultsCount;
-        axios.post(serverConfig.backendUrl + 'search', query)
+        let auth = {headers: {Authorization: 'bearer ' + this.props.JWT}};
+        axios.post(serverConfig.backendUrl + 'search', query, auth)
             .then(function (response) {
                 onSetDerivedResults(response.data.result);
                 onSetDerivedResultsCount(response.data.count)
@@ -106,7 +107,8 @@ class PublicationQueryResult extends React.Component {
         this.props.onSetDerivedQuery(query);
         let onSetDerivedResults = this.props.onSetDerivedResults;
         let onSetDerivedResultsCount = this.props.onSetDerivedResultsCount;
-        axios.post(serverConfig.backendUrl + 'search', query)
+        let auth = {headers: {Authorization: 'bearer ' + this.props.JWT}};
+        axios.post(serverConfig.backendUrl + 'search', query, auth)
             .then(function (response) {
                 onSetDerivedResults(response.data.result);
                 onSetDerivedResultsCount(response.data.count)
@@ -134,7 +136,8 @@ class PublicationQueryResult extends React.Component {
         this.props.onSetDerivedQuery(query);
         let onSetDerivedResults = this.props.onSetDerivedResults;
         let onSetDerivedResultsCount = this.props.onSetDerivedResultsCount;
-        axios.post(serverConfig.backendUrl + 'search', query)
+        let auth = {headers: {Authorization: 'bearer ' + this.props.JWT}};
+        axios.post(serverConfig.backendUrl + 'search', query, auth)
             .then(function (response) {
                 onSetDerivedResults(response.data.result);
                 onSetDerivedResultsCount(response.data.count)
@@ -212,17 +215,20 @@ class PublicationQueryResult extends React.Component {
                                 <Divider/>
                                 {publication.TYPE === 'article' ? (
                                     <h4 className={classes.fieldTitle}>Journal:
-                                        <a
-                                            onClick={this.onClickJournal.bind(this)}> {publication.JOURNAL}</a>
+                                        <a style={{textDecoration: 'underline'}}
+                                           onClick={this.onClickJournal.bind(this)}> {publication.JOURNAL}</a>
                                     </h4>
                                 ) : null}
                                 {publication.TYPE === 'incollection' ? (
-                                    <h4 className={classes.fieldTitle}>Book: <a
-                                        onClick={this.onClickBook.bind(this)}>{publication.BOOKTITLE}</a></h4>
+                                    <h4 className={classes.fieldTitle}>Book:
+                                        <a style={{textDecoration: 'underline'}}
+                                           onClick={this.onClickBook.bind(this)}>{publication.BOOKTITLE}</a>
+                                    </h4>
                                 ) : null}
                                 {publication.TYPE === 'inproceeding' ? (
                                     <h4 className={classes.fieldTitle}>Proceeding:
-                                        <a onClick={this.onClickProceeding.bind(this)}>{publication.BOOKTITLE}</a></h4>
+                                        <a style={{textDecoration: 'underline'}}
+                                           onClick={this.onClickProceeding.bind(this)}>{publication.BOOKTITLE}</a></h4>
                                 ) : null}
                                 {publication.TYPE === 'proceeding' ? (
                                     <h4 className={classes.fieldTitle}>Abbreviation: {publication.BOOKTITLE}</h4>
@@ -294,7 +300,10 @@ PublicationQueryResult.propTypes = {
 };
 
 const mapStateToProps = state => {
-    return {derivedSearch: state.derivedSearch};
+    return {
+        derivedSearch: state.derivedSearch,
+        JWT: state.JWT
+    };
 };
 
 const mapDispatchToProps = dispatch => {

@@ -5,6 +5,7 @@ import WrittenByConstraint from './WrittenByConstraint'
 import TypeConstraint from './TypeConstraint'
 import AuthorOrderConstraint from './AuthorOrderConstraint'
 import PublicationOrderConstraint from './PublicationOrderConstraint'
+import ResetDerivedSearchButton from './ResetDerivedSearchButton'
 import ReactAux from '../../hoc/ReactAux/ReactAux'
 
 
@@ -15,6 +16,7 @@ const QueryControls = (props) => (
         {props.display === 0 ? <TypeConstraint/> : null}
         {props.display === 1 ? <AuthorOrderConstraint/> : null}
         {props.display === 0 ? <PublicationOrderConstraint/> : null}
+        {props.display === 2 ?  <ResetDerivedSearchButton/>: null}
     </ReactAux>
 )
 

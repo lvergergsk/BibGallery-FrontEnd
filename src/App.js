@@ -22,20 +22,20 @@ import Slide from 'material-ui/transitions/Slide';
 
 const theme = createMuiTheme();
 
-// const renderMergedProps = (component, ...rest) => {
-//     const finalProps = Object.assign({}, ...rest);
-//     return (
-//         React.createElement(component, finalProps)
-//     );
-// }
-//
-// const PropsRoute = ({ component, ...rest }) => {
-//     return (
-//         <Route {...rest} render={routeProps => {
-//             return renderMergedProps(component, routeProps, rest);
-//         }}/>
-//     );
-// }
+const renderMergedProps = (component, ...rest) => {
+    const finalProps = Object.assign({}, ...rest);
+    return (
+        React.createElement(component, finalProps)
+    );
+}
+
+const PropsRoute = ({component, ...rest}) => {
+    return (
+        <Route {...rest} render={routeProps => {
+            return renderMergedProps(component, routeProps, rest);
+        }}/>
+    );
+}
 
 class App extends Component {
     state = {
@@ -52,33 +52,40 @@ class App extends Component {
         return <Slide direction="up" {...props} />;
     }
 
+    searchPublication() {
+        this.props.onSaveCurrentPublicationSearch();
+        this.props.onResetPublications();
+        let onSetPublications = this.props.onSetPublications;
+        let auth = {headers: {Authorization: 'bearer ' + this.props.JWT}};
+        axios.post(serverConfig.backendUrl + 'search', this.props.publicationSearch, auth)
+            .then(function (response) {
+                onSetPublications(response.data.result, response.data.count);
+            });
+    }
+
+    searchAuthor() {
+        this.props.onSaveCurrentAuthorSearch();
+        this.props.onResetAuthors();
+        let onSetAuthors = this.props.onSetAuthors;
+        let auth = {headers: {Authorization: 'bearer ' + this.props.JWT}};
+
+        axios.post(serverConfig.backendUrl + 'search', this.props.authorSearch, auth)
+            .then(function (response) {
+                onSetAuthors(response.data.result, response.data.count);
+            });
+    }
+
     onClickSearch() {
         if (this.props.publicationSearch.pubtype.length === 0) {
             this.setState({open: true, transition: this.TransitionUp});
             return;
         }
 
-        this.props.onSaveCurrentPublicationSearch();
-        this.props.onSaveCurrentAuthorSearch();
-        this.props.onResetPublications();
-        this.props.onResetAuthors();
-        let onSetPublications = this.props.onSetPublications;
-        let onSetAuthors = this.props.onSetAuthors;
-        axios.post(serverConfig.backendUrl + 'search', this.props.publicationSearch)
-            .then(function (response) {
-                onSetPublications(response.data.result, response.data.count);
-            });
-
-        axios.post(serverConfig.backendUrl + 'search', this.props.authorSearch)
-            .then(function (response) {
-                onSetAuthors(response.data.result, response.data.count);
-            });
-        // Modern Database Systems
+        this.searchPublication();
+        this.searchAuthor()
     }
 
-    componentDidMount() {
-        this.onClickSearch();
-    }
+
 
     render() {
         return (
@@ -89,7 +96,9 @@ class App extends Component {
                         <Header onClickSearch={this.onClickSearch.bind(this)}/>
                         <div className={classes["page-layout"]}>
                             <Route path="/" exact component={Landing}/>
-                            <Route path="/query" exact component={QueryInterface}/>
+                            <PropsRoute path="/query" exact component={QueryInterface}
+                                        searchPublication={this.searchPublication.bind(this)}
+                                        searchAuthor={this.searchAuthor.bind(this)}/>
                             <Route path="/signin" exact component={Signin}/>
                             <Route path="/signup" exact component={Signup}/>
                             <Route path="/test" exact component={Test}/>
@@ -118,6 +127,7 @@ const mapStateToProps = state => {
     return {
         publicationSearch: state.publicationSearch,
         authorSearch: state.authorSearch,
+        JWT: state.JWT,
     };
 };
 

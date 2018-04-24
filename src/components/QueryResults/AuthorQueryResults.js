@@ -31,10 +31,18 @@ const styles = theme => ({
 class AuthorQueryResults extends React.Component {
     state = {};
 
+
+
+    componentDidMount() {
+        if (this.props.authors.length===0)
+        this.props.searchAuthor();
+    }
+
     loadNext() {
         this.props.onNextAuthorLoad();
         let onConcatAuthors = this.props.onConcatAuthors;
-        axios.post(serverConfig.backendUrl + 'search', this.props.currentAuthorSearch)
+        let auth = {headers: {Authorization: 'bearer ' + this.props.JWT}};
+        axios.post(serverConfig.backendUrl + 'search', this.props.currentAuthorSearch, auth)
             .then(function (response) {
                 onConcatAuthors(response.data.result);
             })
@@ -72,6 +80,7 @@ const mapStateToProps = state => {
         authors: state.authors,
         authorsHasMore: state.authorsHasMore,
         currentAuthorSearch: state.currentAuthorSearch,
+        JWT: state.JWT,
     };
 };
 

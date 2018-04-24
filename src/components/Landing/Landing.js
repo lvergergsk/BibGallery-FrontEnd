@@ -17,7 +17,6 @@ class Landing extends React.Component {
         let onSetDatabaseInfo = this.props.onSetDatabaseInfo;
         axios.get(serverConfig.backendUrl + 'landing')
             .then(function (response) {
-                console.log(response);
                 onSetDatabaseInfo(response.data.databaseInfo);
             })
     }
@@ -29,7 +28,6 @@ class Landing extends React.Component {
                 <div className={classes.root}>
                     <h1>BibGallery</h1>
                     <h3>Search for publication and authors.</h3>
-                    {console.log(this.props.databaseInfo)}
                     {this.props.databaseInfo === undefined ?
                         (<div key={0}><CircularProgress size={100} thickness={2}
                                                         style={{color: purple[500]}}/></div>) :

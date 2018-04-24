@@ -1,8 +1,8 @@
 import * as actions from './actions';
 
 const initialState = {
-    // JWT: null,
-    JWT: 'something',
+    JWT: null,
+    // JWT: 'something',
     publications: [],
     authors: [],
     derivedResults: [],
@@ -197,6 +197,12 @@ const reducer = (state = initialState, action) => {
             case actions.RESETDERIVEDRESULTS:
                 state.derivedResultsHasMore = true;
                 state.derivedResults = [];
+                return {
+                    ...state,
+                };
+            case actions.RESETDERIVEDSEARCH:
+                delete state.derivedSearch;
+                delete state.derivedResultTabTitle;
                 return {
                     ...state,
                 };

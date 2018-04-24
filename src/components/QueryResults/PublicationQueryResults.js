@@ -31,11 +31,16 @@ const styles = theme => ({
 class PublicationQueryResults extends React.Component {
     state = {};
 
+    componentDidMount() {
+        if (this.props.publications.length === 0)
+            this.props.searchPublication();
+    }
+
     loadNext() {
         this.props.onNextPublicationLoad();
         let onConcatPublications = this.props.onConcatPublications;
-        // let onNextPublicationLoad = this.props.onNextPublicationLoad;
-        axios.post(serverConfig.backendUrl + 'search', this.props.currentPublicationSearch)
+        let auth = {headers: {Authorization: 'bearer ' + this.props.JWT}};
+        axios.post(serverConfig.backendUrl + 'search', this.props.currentPublicationSearch, auth)
             .then(function (response) {
                 onConcatPublications(response.data.result);
                 // onNextPublicationLoad();
@@ -74,6 +79,7 @@ const mapStateToProps = state => {
         publications: state.publications,
         publicationsHasMore: state.publicationsHasMore,
         currentPublicationSearch: state.currentPublicationSearch,
+        JWT: state.JWT,
     };
 };
 
