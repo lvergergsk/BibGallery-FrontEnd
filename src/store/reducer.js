@@ -49,8 +49,10 @@ const reducer = (state = initialState, action) => {
                     JWT: null,
                 };
             case actions.SETKEYWORD:
-                if (action.keyword === '') delete state.publicationSearch.params.title;
-                else {
+                if (action.keyword === '') {
+                    delete state.publicationSearch.params.title;
+                    delete state.authorSearch.params.person;
+                } else {
                     state.publicationSearch.params.title = action.keyword;
                     state.authorSearch.params.person = action.keyword;
                 }
@@ -75,7 +77,7 @@ const reducer = (state = initialState, action) => {
                     ...state,
                 };
             case actions.SETPUBLICATIONS:
-                state.publicationsHasMore = true;
+                if (action.publications.length < state.publicationSearch.params.num) state.publicationsHasMore = false;
                 state.publicationCount = action.publicationCount;
                 state.publications = action.publications.sort(function (a, b) {
                     return a.RN - b.RN
@@ -85,7 +87,8 @@ const reducer = (state = initialState, action) => {
                     ...state,
                 };
             case actions.CONCATPUBLICATIONS:
-                if (action.publications.length === 0) state.publicationsHasMore = false;
+                console.log(action.publications);
+                if (action.publications.length < state.currentPublicationSearch.params.num) state.publicationsHasMore = false;
                 else {
                     state.publications = state.publications.concat(action.publications).sort(function (a, b) {
                         return a.RN - b.RN
@@ -104,22 +107,16 @@ const reducer = (state = initialState, action) => {
                 return {
                     ...state,
                 };
-            case actions.RESETPUBLICATIONOFFSET:
-                state.publicationSearch.params.offset = 0;
-                return {
-                    ...state,
-                };
             case actions.RESETPUBLICATIONS:
+                state.publicationSearch.params.offset = 0;
+                state.publicationsHasMore = true;
                 return {
                     ...state,
                     publications: [],
                 };
-            case actions.RESETAUTHOROFFSET:
-                state.authorSearch.params.offset = 0;
-                return {
-                    ...state,
-                };
             case actions.RESETAUTHORS:
+                state.authorsHasMore = true
+                state.authorSearch.params.offset = 0;
                 return {
                     ...state,
                     authors: [],
@@ -158,7 +155,7 @@ const reducer = (state = initialState, action) => {
                     derivedSearch: action.query,
                 };
             case actions.SETDERIVEDRESULTS:
-                state.derivedResultsHasMore = true;
+                if (action.results.length < state.derivedSearch.params.num) state.derivedResultsHasMore = false;
                 state.derivedResults = action.results.sort(function (a, b) {
                     return a.RN - b.RN
                 });
@@ -166,7 +163,7 @@ const reducer = (state = initialState, action) => {
                     ...state,
                 };
             case actions.CONCATDERIVEDRESULTS:
-                if (action.results.length === 0) state.derivedResultsHasMore = false;
+                if (action.results.length < state.derivedSearch.params.num) state.derivedResultsHasMore = false;
                 state.derivedResults = state.derivedResults.concat(action.results).sort(function (a, b) {
                     return a.RN - b.RN
                 });
@@ -174,7 +171,8 @@ const reducer = (state = initialState, action) => {
                     ...state,
                 };
             case actions.CONCATAUTHORS:
-                if (action.results.length === 0) state.authorsHasMore = false;
+                console.log(action.authors);
+                if (action.authors.length < state.currentAuthorSearch.params.num) state.authorsHasMore = false;
                 state.authors = state.authors.concat(action.authors).sort(function (a, b) {
                     return a.RN - b.RN
                 });
@@ -197,6 +195,7 @@ const reducer = (state = initialState, action) => {
                     ...state,
                 };
             case actions.RESETDERIVEDRESULTS:
+                state.derivedResultsHasMore = true;
                 state.derivedResults = [];
                 return {
                     ...state,
@@ -208,10 +207,10 @@ const reducer = (state = initialState, action) => {
                     ...state,
                 };
             case actions.SETAUTHORS:
-                state.authorsHasMore = true;
+                console.log(action.authors)
+                if (action.authors.length < state.authorSearch.params.num) state.authorsHasMore = false;
                 state.authorCount = action.authorCount;
                 state.authors = action.authors;
-                console.log('SETAUTHORS', state.authors);
                 return {
                     ...state,
                 };

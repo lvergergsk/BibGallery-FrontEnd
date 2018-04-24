@@ -35,7 +35,6 @@ class PublicationQueryResults extends React.Component {
         this.props.onNextPublicationLoad();
         let onConcatPublications = this.props.onConcatPublications;
         // let onNextPublicationLoad = this.props.onNextPublicationLoad;
-        console.log(this.props.currentPublicationSearch);
         axios.post(serverConfig.backendUrl + 'search', this.props.currentPublicationSearch)
             .then(function (response) {
                 onConcatPublications(response.data.result);
@@ -46,7 +45,7 @@ class PublicationQueryResults extends React.Component {
     render() {
         const {classes, publications} = this.props;
         return (<div>
-                {publications.length === 0 ?
+                {publications.length === 0 && this.props.publicationsHasMore ?
                     (<div key={0}><CircularProgress className={classes.initializeProgress} size={100} thickness={2}
                                                     style={{color: purple[500]}}/></div>) :
                     (<div className={classes.list}>
@@ -74,7 +73,7 @@ const mapStateToProps = state => {
     return {
         publications: state.publications,
         publicationsHasMore: state.publicationsHasMore,
-        currentPublicationSearch:state.currentPublicationSearch,
+        currentPublicationSearch: state.currentPublicationSearch,
     };
 };
 
