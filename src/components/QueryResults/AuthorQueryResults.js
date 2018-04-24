@@ -1,46 +1,87 @@
 import React from 'react'
-import AuthorQueryResult from './AuthorQueryResult'
-// Publication order
-// num of publication
-class AuthorQueryResults extends React.Component {
-    state = {
-        authors: [
-            {
-                personId: '001',
-                names: ['name 1 of Author 1', 'name 2 of Author 1', 'name 3 of Author 1'],
-                publications: ['publication 1 of Author 1', 'publication 2 of Author 1'],
-                websites: ['author1.website.com']
-            },
-            {
-                personId: '002',
-                names: ['name 1 of Author 2'],
-                publications: ['publication 1 of Author 2', 'publication 2 of Author 2',
-                    'publication 3 of Author 2', 'publication 4 of Author 2'],
-                websites: []
-            },
-            {
-                personId: '003',
-                names: ['name 1 of Author 3'],
-                publications: ['publication 1 of Author 2', 'publication 2 of Author 2',
-                    'publication 3 of Author 2', 'publication 4 of Author 2'],
-                websites: ['author3.website.com', 'author3.website2.com']
-            },
-        ]
+import {connect} from "react-redux";
+import * as actions from "../../store/actions";
 
+import AuthorQueryResult from './AuthorQueryResult'
+import {withStyles} from "material-ui/styles/index";
+import axios from "axios/index";
+import serverConfig from "../../serverConfig";
+import {CircularProgress} from 'material-ui/Progress';
+
+import InfiniteScroll from 'react-infinite-scroller';
+import purple from 'material-ui/colors/purple';
+
+const styles = theme => ({
+    list: {
+        height: '84vh',
+        overflow: 'auto',
+        marginTop: '5px',
+        width: '100%',
+    },
+    initializeProgress: {
+        position: 'absolute',
+        top: '50%',
+        transform: 'translateY(-50%) translateX(-50%)',
+    },
+    progress: {
+        margin: theme.spacing.unit * 2,
+    },
+});
+
+class AuthorQueryResults extends React.Component {
+    state = {};
+
+    loadNext() {
+        this.props.onNextAuthorLoad();
+        let onConcatAuthors = this.props.onConcatAuthors;
+        console.log(this.props.currentPublicationSearch);
+        axios.post(serverConfig.backendUrl + 'search', this.props.currentAuthorSearch)
+            .then(function (response) {
+                onConcatAuthors(response.data.result);
+            })
     }
 
     render() {
-        return (
-            this.state.authors.map(author => {
-                return <AuthorQueryResult
-                    key={author.personId}
-                    author={author}
-                />
-            })
-        );
-
+        const {classes, authors} = this.props;
+        return (<div>
+                {authors.length === 0 ?
+                    (<div key={0}><CircularProgress className={classes.initializeProgress} size={100} thickness={2}
+                                                    style={{color: purple[500]}}/></div>) :
+                    (<div className={classes.list}>
+                        <InfiniteScroll
+                            pageStart={0}
+                            loadMore={this.loadNext.bind(this)}
+                            hasMore={this.props.authorsHasMore}
+                            useWindow={false}
+                            loader={<div key={0}><CircularProgress className={classes.progress} size={100}
+                                                                   thickness={2}/></div>}>
+                            {this.props.authors.map(author => {
+                                return <AuthorQueryResult
+                                    key={author.RN}
+                                    author={author}
+                                />
+                            })}
+                        </InfiniteScroll>
+                    </div>)}
+            </div>
+        )
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        authors: state.authors,
+        authorsHasMore: state.authorsHasMore,
+        currentAuthorSearch:state.currentAuthorSearch,
+    };
+};
 
-export default AuthorQueryResults;
+const mapDispatchToProps = dispatch => {
+    return {
+        onNextAuthorLoad: () => dispatch({type: actions.NEXTAUTHORLOAD}),
+        onConcatAuthors: (publications) => dispatch({type: actions.CONCATAUTHORS, publications: publications})
+    };
+};
+
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(AuthorQueryResults))

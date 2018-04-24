@@ -5,7 +5,7 @@ import ExpansionPanel, {ExpansionPanelDetails, ExpansionPanelSummary,} from 'mat
 import Typography from 'material-ui/Typography';
 import classNames from "classnames";
 import Divider from 'material-ui/Divider';
-
+import ReactAux from '../../hoc/ReactAux/ReactAux';
 const styles = theme => ({
     root: {
         flexGrow: 1,
@@ -37,35 +37,55 @@ const styles = theme => ({
 });
 
 class AuthorQueryResult extends React.Component {
+    isJsonString(str) {
+        try {
+            JSON.parse(str).map(function () {
+                return null;
+            });
+        } catch (e) {
+            return false;
+        }
+        return true;
+    }
 
     render() {
         const {classes, author} = this.props;
+        let homepages = this.isJsonString(author.HOMEPAGE) ? JSON.parse(author.HOMEPAGE) : [author.HOMEPAGE];
+        let affiliations = this.isJsonString(author.AFFILIATION) ? JSON.parse(author.AFFILIATION) : [author.AFFILIATION];
         return (
             <ExpansionPanel>
                 <ExpansionPanelSummary>
-                    <Typography className={classes.heading}>{author.names[0]}</Typography>
+                    <Typography className={classes.heading}>#authorName</Typography>
                     <Typography className={classes.secondaryHeading}>Number of
-                        Publications: {author.publications.length}</Typography>
+                        Publications: #theNumber</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
                     <div className={classes.column}>
 
                         <h4 className={classes.fieldTitle}>Other Name:</h4>
-                        {author.names.map(function (name, key) {
-                            return (<div key={key}>{name}</div>)
-                        })}
+                        {/*{author.names.map(function (name, key) {*/}
+                        {/*return (<div key={key}>{name}</div>)*/}
+                        {/*})}*/}
+                        #otherNames
                         <br/>
+                        {homepages.length===0?null:<ReactAux><Divider/>
+                            <h4 className={classes.fieldTitle}>Homepages:</h4>
+                            {homepages.map(function (homepage) {
+                                return (<div key={homepages.indexOf(homepage)}>{homepage}</div>)
+                            })}
+                            <br/></ReactAux>}
                         <Divider/>
-                        <h4 className={classes.fieldTitle}>Websites:</h4>
-                        {author.websites.map(function (website, key) {
-                            return (<div key={key}>{website}</div>)
+                        <h4 className={classes.fieldTitle}>Affiliations:</h4>
+                        {affiliations.map(function (affiliation) {
+                            return (<div key={affiliations.indexOf(affiliation)}>{affiliation}</div>)
                         })}
                     </div>
                     <div className={classNames(classes.column, classes.helper)}>
                         <h4 className={classes.fieldTitle}>publications:</h4>
-                        {author.publications.map(function (publication, key) {
-                            return (<div key={key}>{publication}</div>)
-                        })}
+                        {/*{author.publications.map(function (publication, key) {*/}
+                        {/*return (<div key={key}>{publication}</div>)*/}
+                        {/*})}*/}
+                        #publications
                     </div>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
