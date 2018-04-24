@@ -35,7 +35,8 @@ class DerivedQueryResults extends React.Component {
         this.props.onNextDerivedLoad();
         let onConcatDerivedResults = this.props.onConcatDerivedResults;
         console.log(this.props.derivedSearch);
-        axios.post(serverConfig.backendUrl + 'search', this.props.derivedSearch)
+        let auth = {headers: {Authorization: 'bearer ' + this.props.JWT}};
+        axios.post(serverConfig.backendUrl + 'search', this.props.derivedSearch,auth)
             .then(function (response) {
                 onConcatDerivedResults(response.data.result);
             })
@@ -76,7 +77,8 @@ const mapStateToProps = state => {
     return {
         derivedResults: state.derivedResults,
         derivedResultsHasMore: state.derivedResultsHasMore,
-        derivedSearch: state.derivedSearch
+        derivedSearch: state.derivedSearch,
+        JWT:state.JWT,
     };
 };
 

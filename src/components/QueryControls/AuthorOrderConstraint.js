@@ -57,7 +57,7 @@ class AuthorOrderConstraint extends React.Component {
                             }}
                         >
                             <MenuItem value={0}>Sort by Id</MenuItem>
-                            <MenuItem value={1}>Sort by total publication</MenuItem>
+                            {/*<MenuItem value={1}>Sort by total publication</MenuItem>*/}
                         </Select>
                     </div>
                 </CardContent>

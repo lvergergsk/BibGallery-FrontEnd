@@ -82,8 +82,8 @@ class QueryInterface extends Component {
 
                             </Tabs>
                         </Paper>
-                        {tabNumber === 0 && <PublicationQueryResults/>}
-                        {tabNumber === 1 && <AuthorQueryResults/>}
+                        {tabNumber === 0 && <PublicationQueryResults searchPublication={this.props.searchPublication}/>}
+                        {tabNumber === 1 && <AuthorQueryResults searchAuthor={this.props.searchAuthor}/>}
                         {tabNumber === 2 && <DerivedQueryResults/>}
 
                     </Grid>

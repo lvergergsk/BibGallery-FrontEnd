@@ -6,6 +6,10 @@ import Typography from 'material-ui/Typography';
 import classNames from "classnames";
 import Divider from 'material-ui/Divider';
 import ReactAux from '../../hoc/ReactAux/ReactAux';
+import serverConfig from "../../serverConfig";
+import axios from "axios/index";
+import * as actions from "../../store/actions";
+import {connect} from "react-redux";
 
 const styles = theme => ({
     root: {
@@ -51,6 +55,35 @@ class AuthorQueryResult extends React.Component {
         return true;
     }
 
+    onClickPublicationName(id) {
+        this.props.onResetDerivedResults();
+        this.props.onSetDerivedResultsTabTitle('Publication');
+        this.props.onSetTabNumber(2);
+        let query = {
+            type: "pub",
+            pubtype: ["incollection", "book"],
+            params: {
+                "title": this.props.author.PUBLICATION[id].NAME,
+                "offset": 0,
+                "num": 10
+            },
+            "order": {
+                "type": "year",
+                "order": "ASC"
+            }
+        };
+
+        this.props.onSetDerivedQuery(query);
+        let onSetDerivedResults = this.props.onSetDerivedResults;
+        let onSetDerivedResultsCount = this.props.onSetDerivedResultsCount;
+        let auth = {headers: {Authorization: 'bearer ' + this.props.JWT}};
+        axios.post(serverConfig.backendUrl + 'search', query, auth)
+            .then(function (response) {
+                onSetDerivedResults(response.data.result);
+                onSetDerivedResultsCount(response.data.count)
+            });
+    }
+
     render() {
         const {classes, author} = this.props;
         let homepages = author.HOMEPAGE === null ? [] :
@@ -78,7 +111,11 @@ class AuthorQueryResult extends React.Component {
                         <h4 className={classes.fieldTitle}>publications:</h4>
                         {publicationTitles.map(publicationTitle => (
                             <div style={{textAlign: 'left',}}
-                                 key={publicationTitles.indexOf(publicationTitle)}>- {publicationTitle}</div>))}
+                                 key={publicationTitles.indexOf(publicationTitle)}>- <a style={{textDecoration:'underline'}}
+                                onClick={() => this.onClickPublicationName(publicationTitles.indexOf(publicationTitle))}>
+                                {publicationTitle}
+                            </a>
+                            </div>))}
                     </div>
                     <div className={classNames(classes.column, classes.helper)}>
                         {coauthorNames.length === 0 ? null : <ReactAux>
@@ -121,4 +158,33 @@ AuthorQueryResult.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(AuthorQueryResult);
+
+const mapStateToProps = state => {
+    return {
+        derivedSearch: state.derivedSearch,
+        JWT: state.JWT
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onResetDerivedResults: () => dispatch({type: actions.RESETDERIVEDRESULTS}),
+        onSetDerivedQuery: (query) => {
+            dispatch({type: actions.SETDERIVEDQUERY, query: query})
+        },
+        onSetDerivedResults: (results) => {
+            dispatch({type: actions.SETDERIVEDRESULTS, results: results})
+        },
+        onSetTabNumber: (tabNumber) => dispatch({type: actions.SETTABNUMBER, tabNumber: tabNumber}),
+        onSetDerivedResultsCount: (derivedResultsCount) => dispatch({
+            type: actions.SETDERIVEDRESULTSCOUNT,
+            derivedResultsCount: derivedResultsCount
+        }),
+        onSetDerivedResultsTabTitle: (derivedResultTabTitle) => dispatch({
+            type: actions.SETDERIVEDRESULTSTABTITLE,
+            derivedResultTabTitle: derivedResultTabTitle
+        }),
+    };
+};
+
+export default withStyles(styles)(connect(mapStateToProps, mapDispatchToProps)(AuthorQueryResult));
